@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Env files
+.env
+
+# Python
+disease-service/venv/
+disease-service/__pycache__/
+disease-service/model/*.h5
+disease-service/dataset/
+
+# Build output
+frontend/build/
+
+# OS
+.DS_Store
+Thumbs.db

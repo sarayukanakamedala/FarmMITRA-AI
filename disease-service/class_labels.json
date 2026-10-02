@@ -1,0 +1,32 @@
+{
+  "0": {
+    "label": "bacterial_leaf_blight",
+    "display_name": "Bacterial Leaf Blight",
+    "remedy": "Drain excess water from the field, avoid nitrogen over-application, and use copper-based bactericide if severe. Avoid working in the field when leaves are wet."
+  },
+  "1": {
+    "label": "brown_spot",
+    "display_name": "Brown Spot",
+    "remedy": "Improve soil nutrition (especially potassium), apply recommended fungicide, and use certified disease-free seeds next season."
+  },
+  "2": {
+    "label": "healthy",
+    "display_name": "Healthy Leaf",
+    "remedy": "No disease detected. Continue regular monitoring and follow the standard crop calendar."
+  },
+  "3": {
+    "label": "leaf_blast",
+    "display_name": "Leaf Blast",
+    "remedy": "Avoid excess nitrogen fertilizer, ensure proper field drainage, and apply a recommended fungicide (e.g. tricyclazole) at early signs."
+  },
+  "4": {
+    "label": "sheath_rot",
+    "display_name": "Sheath Rot",
+    "remedy": "Improve field aeration by avoiding overly dense planting, reduce excess nitrogen, and apply recommended fungicide before flag leaf emergence."
+  },
+  "5": {
+    "label": "tungro",
+    "display_name": "Tungro Virus",
+    "remedy": "Remove and destroy infected plants, control the green leafhopper vector with recommended insecticide, and use tungro-resistant varieties next season."
+  }
+}

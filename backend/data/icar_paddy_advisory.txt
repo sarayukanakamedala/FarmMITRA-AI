@@ -1,0 +1,43 @@
+PADDY CROP ADVISORY (Sample reference text for RAG - replace with actual ICAR/state advisory PDFs)
+
+1. SOWING AND NURSERY MANAGEMENT
+Use certified, disease-free seeds. Treat seeds with recommended fungicide before sowing to prevent
+seed-borne diseases. Maintain a thin film of water in the nursery bed. Nursery duration is typically
+20-25 days before transplanting.
+
+2. TRANSPLANTING
+Transplant healthy 20-25 day old seedlings at 20x15 cm spacing, 2-3 seedlings per hill. Avoid
+transplanting during peak heat hours; early morning or late evening is preferred.
+
+3. WATER MANAGEMENT
+Maintain 2-3 cm standing water during the vegetative stage. Drain the field briefly during active
+tillering to encourage root development, then reflood. Water stress during panicle initiation and
+flowering stages causes the most significant yield loss - these are the most water-critical periods.
+
+4. FERTILIZER MANAGEMENT
+Apply fertilizer in split doses: basal dose at transplanting, first top dressing at active tillering
+(around 30 days after transplanting), and second top dressing at panicle initiation (around 55-60 days).
+Sandy soils leach nutrients faster and benefit from smaller, more frequent doses. Clay soils retain
+nutrients longer and are more prone to nitrogen loss through waterlogging if over-irrigated.
+
+5. PEST AND DISEASE MANAGEMENT
+Common paddy diseases include:
+- Blast (Pyricularia oryzae): appears as spindle-shaped lesions on leaves; favored by high humidity
+  and excess nitrogen. Avoid excess nitrogen application; use resistant varieties where possible.
+- Bacterial Leaf Blight: yellowing and drying of leaf margins; spreads rapidly in warm, humid, windy
+  conditions; avoid field-to-field water flow during outbreaks.
+- Sheath Rot: affects the flag leaf sheath, reducing grain fill; more common in dense, over-fertilized
+  crops with poor aeration.
+- Brown Spot: oval brown lesions on leaves, often linked to nutrient-deficient soils.
+Regular field monitoring during tillering through flowering stages is critical for early detection.
+
+6. HARVESTING
+Harvest when 80-85% of grains have turned golden yellow, typically 30-35 days after flowering.
+Delayed harvest increases grain shattering losses. Drain field water approximately 10 days before
+the expected harvest date to allow the field to dry for easier harvesting.
+
+7. POST-HARVEST AND MARKET TIMING
+Distress selling immediately after harvest, when local supply is high, typically yields lower prices.
+Farmers with on-farm storage capacity can benefit from monitoring mandi price trends across nearby
+markets and holding produce briefly if prices are expected to improve, weighed against storage costs
+and quality risk from moisture/pests during storage.

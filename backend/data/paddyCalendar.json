@@ -1,0 +1,77 @@
+{
+  "cropDurationDays": 120,
+  "stages": [
+    {
+      "stage": "Nursery",
+      "startDay": 0,
+      "endDay": 20,
+      "baseTasks": [
+        { "offsetDay": 0, "title": "Sow pre-germinated seeds in nursery bed", "details": "Use certified seeds; maintain a thin water film in the nursery bed." },
+        { "offsetDay": 10, "title": "Apply first light irrigation and check for seedling health", "details": "Watch for early pest/fungal issues in the nursery." }
+      ]
+    },
+    {
+      "stage": "Transplanting",
+      "startDay": 20,
+      "endDay": 25,
+      "baseTasks": [
+        { "offsetDay": 20, "title": "Transplant seedlings to main field", "details": "Maintain 20x15 cm spacing; transplant 2-3 seedlings per hill." }
+      ]
+    },
+    {
+      "stage": "Tillering",
+      "startDay": 25,
+      "endDay": 55,
+      "baseTasks": [
+        { "offsetDay": 30, "title": "Apply first dose of nitrogen fertilizer", "details": "Split nitrogen dose as per soil-adjusted guidance." },
+        { "offsetDay": 40, "title": "Check water level and weed the field", "details": "Maintain 2-3 cm standing water; remove weeds manually or with recommended herbicide." },
+        { "offsetDay": 50, "title": "Monitor for stem borer and leaf folder pests", "details": "Inspect leaves for early pest damage signs." }
+      ]
+    },
+    {
+      "stage": "Panicle Initiation",
+      "startDay": 55,
+      "endDay": 70,
+      "baseTasks": [
+        { "offsetDay": 58, "title": "Apply second dose of fertilizer (panicle initiation stage)", "details": "Critical stage for yield - do not delay this application." },
+        { "offsetDay": 65, "title": "Maintain consistent water level, avoid water stress", "details": "Water stress at this stage significantly reduces yield." }
+      ]
+    },
+    {
+      "stage": "Flowering",
+      "startDay": 70,
+      "endDay": 95,
+      "baseTasks": [
+        { "offsetDay": 75, "title": "Monitor for neck blast and sheath rot disease", "details": "High humidity increases disease risk during flowering." },
+        { "offsetDay": 85, "title": "Ensure adequate water - flowering is highly water-sensitive", "details": "Avoid draining the field during this window." }
+      ]
+    },
+    {
+      "stage": "Maturity & Harvest",
+      "startDay": 95,
+      "endDay": 120,
+      "baseTasks": [
+        { "offsetDay": 100, "title": "Drain field water gradually ahead of harvest", "details": "Stop irrigation about 10 days before expected harvest." },
+        { "offsetDay": 115, "title": "Check grain maturity and plan harvest", "details": "Harvest when 80-85% of grains have turned golden yellow." },
+        { "offsetDay": 118, "title": "Check nearby mandi prices before selling", "details": "Use the market advisory feature to decide optimal selling time/location." }
+      ]
+    }
+  ],
+  "soilAdjustments": {
+    "clay": {
+      "irrigationNote": "Clay soil retains water longer - reduce irrigation frequency, watch for waterlogging.",
+      "fertilizerNote": "Standard fertilizer dose is sufficient; ensure field drains before fertilizer application.",
+      "irrigationOffsetDays": 2
+    },
+    "loamy": {
+      "irrigationNote": "Loamy soil - follow standard baseline irrigation schedule.",
+      "fertilizerNote": "Standard fertilizer dose as per baseline calendar.",
+      "irrigationOffsetDays": 0
+    },
+    "sandy": {
+      "irrigationNote": "Sandy soil drains fast - irrigate more frequently to avoid moisture stress.",
+      "fertilizerNote": "Split fertilizer into smaller, more frequent doses since nutrients leach faster.",
+      "irrigationOffsetDays": -2
+    }
+  }
+}
