@@ -10,6 +10,17 @@ const { getMandiPrices } = require('../services/marketPriceService');
 const { getWeatherForecast } = require('../services/weatherService');
 const { retrieveRelevantAdvisory } = require('../services/ragService');
 const ChatHistory = require('../models/ChatHistory');
+const Farmer = require('../models/Farmer');
+
+async function farmerIdFor(phone) {
+  if (!phone) return null;
+  try {
+    const f = await Farmer.findOne({ phone }).select('_id');
+    return f ? f._id : null;
+  } catch (e) {
+    return null;
+  }
+}
 
 /**
  * POST /api/query/text
@@ -19,7 +30,7 @@ const ChatHistory = require('../models/ChatHistory');
  */
 router.post('/text', async (req, res) => {
   try {
-    const { question, state, district, language } = req.body;
+    const { question, state, district, language, phone } = req.body;
     if (!question) return res.status(400).json({ error: 'question is required' });
 
     // 1. Figure out crop + location from the farmer's question
@@ -54,6 +65,7 @@ router.post('/text', async (req, res) => {
     // 5. Log to chat history (best-effort, don't fail the request if DB is down)
     try {
       await ChatHistory.create({
+        farmer: await farmerIdFor(phone),
         queryText: question,
         queryType: 'market',
         responseText: answerText,
@@ -77,7 +89,7 @@ router.post('/text', async (req, res) => {
 router.post('/voice', upload.single('audio'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'audio file is required' });
-    const { state, district, language } = req.body;
+    const { state, district, language, phone } = req.body;
 
     // 1. Speech to text
     const question = await speechToText(req.file.buffer, language || 'te-IN');
@@ -101,12 +113,45 @@ router.post('/voice', upload.single('audio'), async (req, res) => {
       language,
     });
 
-    const audioBase64 = await textToSpeech(answerText, language || 'te-IN');
+    let audioBase64 = null;
+    try {
+      audioBase64 = await textToSpeech(answerText, language || 'te-IN');
+    } catch (ttsErr) {
+      console.warn('TTS failed, returning text-only response:', ttsErr.message);
+    }
+
+    try {
+      await ChatHistory.create({
+        farmer: await farmerIdFor(phone),
+        queryText: question,
+        queryType: 'market',
+        responseText: answerText,
+      });
+    } catch (dbErr) {
+      console.warn('Could not save chat history:', dbErr.message);
+    }
 
     res.json({ transcribedQuestion: question, answerText, audioBase64, priceData, weatherData });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to process voice query.' });
+  }
+});
+
+/**
+ * GET /api/query/history/:phone?limit=20
+ * Recent questions and answers for a farmer (newest first).
+ */
+router.get('/history/:phone', async (req, res) => {
+  try {
+    const farmerId = await farmerIdFor(req.params.phone);
+    if (!farmerId) return res.json({ history: [] });
+    const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
+    const history = await ChatHistory.find({ farmer: farmerId }).sort({ createdAt: -1 }).limit(limit);
+    res.json({ history });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load history.' });
   }
 });
 

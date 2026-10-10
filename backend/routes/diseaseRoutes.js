@@ -6,6 +6,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const { detectDisease } = require('../services/diseaseService');
 const { textToSpeech } = require('../services/sarvamService');
 const ChatHistory = require('../models/ChatHistory');
+const Farmer = require('../models/Farmer');
 
 /**
  * POST /api/disease/detect
@@ -14,7 +15,7 @@ const ChatHistory = require('../models/ChatHistory');
 router.post('/detect', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'image file is required' });
-    const { language } = req.body;
+    const { language, phone } = req.body;
 
     const result = await detectDisease(req.file.buffer, req.file.originalname);
 
@@ -34,7 +35,9 @@ router.post('/detect', upload.single('image'), async (req, res) => {
     }
 
     try {
+      const farmerDoc = phone ? await Farmer.findOne({ phone }).select('_id') : null;
       await ChatHistory.create({
+        farmer: farmerDoc ? farmerDoc._id : null,
         queryText: '[Image upload - paddy leaf]',
         queryType: 'disease',
         responseText,

@@ -10,7 +10,7 @@ async function detectDisease(imageBuffer, originalFilename) {
   form.append('file', imageBuffer, { filename: originalFilename || 'leaf.jpg' });
 
   try {
-    const response = await axios.post(process.env.DISEASE_SERVICE_URL, form, {
+    const response = await axios.post(process.env.DISEASE_SERVICE_URL || 'http://localhost:8000/predict', form, {
       headers: form.getHeaders(),
       timeout: 15000,
     });

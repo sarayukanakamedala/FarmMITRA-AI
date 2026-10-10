@@ -16,8 +16,23 @@ router.get('/:phone/tasks', async (req, res) => {
     const farmer = await Farmer.findOne({ phone: req.params.phone });
     if (!farmer) return res.status(404).json({ error: 'Farmer not found.' });
 
-    const tasks = await Task.find({ farmer: farmer._id }).sort({ dueDate: 1 });
-    res.json({ farmer, tasks });
+    const docs = await Task.find({ farmer: farmer._id }).sort({ dueDate: 1 });
+
+    // A pending task whose due date has passed is reported as "overdue".
+    const startOfToday = new Date(new Date().toDateString());
+    const tasks = docs.map((t) => {
+      const obj = t.toObject();
+      if (obj.status === 'pending' && new Date(obj.dueDate) < startOfToday) obj.status = 'overdue';
+      return obj;
+    });
+
+    const summary = {
+      total: tasks.length,
+      done: tasks.filter((t) => t.status === 'done').length,
+      overdue: tasks.filter((t) => t.status === 'overdue').length,
+      pending: tasks.filter((t) => t.status === 'pending').length,
+    };
+    res.json({ farmer, tasks, summary });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch tasks.' });
   }
@@ -56,6 +71,20 @@ router.patch('/task/:taskId/complete', async (req, res) => {
       { status: 'done' },
       { new: true }
     );
+    if (!task) return res.status(404).json({ error: 'Task not found.' });
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update task.' });
+  }
+});
+
+/**
+ * PATCH /api/calendar/task/:taskId/reopen
+ * Lets a farmer undo an accidental "Mark done".
+ */
+router.patch('/task/:taskId/reopen', async (req, res) => {
+  try {
+    const task = await Task.findByIdAndUpdate(req.params.taskId, { status: 'pending' }, { new: true });
     if (!task) return res.status(404).json({ error: 'Task not found.' });
     res.json(task);
   } catch (err) {

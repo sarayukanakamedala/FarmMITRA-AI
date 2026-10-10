@@ -1,6 +1,9 @@
 const axios = require('axios');
 const FormData = require('form-data');
 
+const STT_URL = () => process.env.SARVAM_STT_URL || 'https://api.sarvam.ai/speech-to-text';
+const TTS_URL = () => process.env.SARVAM_TTS_URL || 'https://api.sarvam.ai/text-to-speech';
+
 /**
  * Convert farmer's spoken audio (buffer) to text using Sarvam STT.
  * audioBuffer: Buffer from multer file upload
@@ -12,7 +15,7 @@ async function speechToText(audioBuffer, languageCode = 'te-IN') {
   form.append('language_code', languageCode);
   form.append('model', 'saarika:v2');
 
-  const response = await axios.post(process.env.SARVAM_STT_URL, form, {
+  const response = await axios.post(STT_URL(), form, {
     headers: {
       ...form.getHeaders(),
       'api-subscription-key': process.env.SARVAM_API_KEY,
@@ -28,7 +31,7 @@ async function speechToText(audioBuffer, languageCode = 'te-IN') {
  */
 async function textToSpeech(text, languageCode = 'te-IN') {
   const response = await axios.post(
-    process.env.SARVAM_TTS_URL,
+    TTS_URL(),
     {
       inputs: [text],
       target_language_code: languageCode,

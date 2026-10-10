@@ -7,7 +7,14 @@ const BASE_URL = 'https://api.data.gov.in/resource';
  * Falls back to state-wide data if no records exist for the exact district
  * (mandi data isn't reported by every market every day).
  */
+// Agmarknet lists paddy as "Paddy(Dhan)(Common)"; the LLM usually returns "Paddy".
+function normaliseCommodity(name) {
+  if (!name || /^(paddy|rice|dhan)$/i.test(String(name).trim())) return 'Paddy(Dhan)(Common)';
+  return name;
+}
+
 async function getMandiPrices({ commodity = 'Paddy', state, district }) {
+  commodity = normaliseCommodity(commodity);
   const url = `${BASE_URL}/${process.env.AGMARKNET_RESOURCE_ID}`;
   const baseParams = {
     'api-key': process.env.AGMARKNET_API_KEY,

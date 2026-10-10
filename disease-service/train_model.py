@@ -31,6 +31,7 @@ If you have Colab/GPU access, increase EPOCHS and unfreeze more base layers
 for better accuracy.
 """
 
+import os
 import tensorflow as tf
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
@@ -80,6 +81,7 @@ model.summary()
 history = model.fit(train_gen, validation_data=val_gen, epochs=EPOCHS)
 
 # ---- Save ----
+os.makedirs("model", exist_ok=True)
 model.save("model/paddy_disease_model.h5")
 print("Model saved to model/paddy_disease_model.h5")
 print("Final validation accuracy:", history.history["val_accuracy"][-1])

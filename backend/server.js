@@ -8,6 +8,7 @@ const queryRoutes = require('./routes/queryRoutes');
 const diseaseRoutes = require('./routes/diseaseRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
 const notifyRoutes = require('./routes/notifyRoutes');
+const marketRoutes = require('./routes/marketRoutes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use('/api/query', queryRoutes);
 app.use('/api/disease', diseaseRoutes);
 app.use('/api/calendar', calendarRoutes);
 app.use('/api/notify', notifyRoutes);
+app.use('/api/market', marketRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`FarmMitra AI backend running on port ${PORT}`));
