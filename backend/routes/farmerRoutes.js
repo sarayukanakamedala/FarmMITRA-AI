@@ -1,8 +1,15 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
 const Farmer = require('../models/Farmer');
 const Task = require('../models/Task');
 const { generateTaskList } = require('../services/cropCalendarService');
+
+const DB_DOWN = {
+  error:
+    'The database is not connected. Set MONGO_URI in backend/.env (and allow your IP in MongoDB Atlas > Network Access), then restart the backend.',
+};
+const dbReady = () => mongoose.connection.readyState === 1;
 
 const cleanPhone = (p) => String(p || '').replace(/[^\d+]/g, '');
 
@@ -13,6 +20,7 @@ const cleanPhone = (p) => String(p || '').replace(/[^\d+]/g, '');
  * the task list is only generated once.
  */
 router.post('/register', async (req, res) => {
+  if (!dbReady()) return res.status(503).json(DB_DOWN);
   try {
     const { name, email, preferredLanguage, state, district, plantingDate, soilType } = req.body;
     const phone = cleanPhone(req.body.phone);
@@ -49,8 +57,10 @@ router.post('/register', async (req, res) => {
 
     res.json({ farmer, taskCount, created });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to register farmer.' });
+    console.error('Register error:', err);
+    if (err.name === 'ValidationError') return res.status(400).json({ error: err.message });
+    if (err.code === 11000) return res.status(409).json({ error: 'This phone number is already registered. Use Sign in.' });
+    res.status(500).json({ error: `Failed to register farmer: ${err.message}` });
   }
 });
 
@@ -58,6 +68,7 @@ router.post('/register', async (req, res) => {
  * GET /api/farmers/:phone  (also used as "sign in")
  */
 router.get('/:phone', async (req, res) => {
+  if (!dbReady()) return res.status(503).json(DB_DOWN);
   try {
     const farmer = await Farmer.findOne({ phone: cleanPhone(req.params.phone) });
     if (!farmer) return res.status(404).json({ error: 'No farmer found with this phone number.' });
