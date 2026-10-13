@@ -51,10 +51,15 @@ router.get('/:phone/reminder', async (req, res) => {
     const allTasks = await Task.find({ farmer: farmer._id, status: 'pending' });
     const dueTasks = getDueTasks(allTasks);
 
-    const reminderText = await phraseTaskReminder(dueTasks, farmer.preferredLanguage);
-    const audioBase64 = await textToSpeech(reminderText, farmer.preferredLanguage || 'en-IN');
+    const reminder = await phraseTaskReminder(dueTasks, farmer.preferredLanguage);
+    let audioBase64 = null;
+    try {
+      audioBase64 = await textToSpeech(reminder.text, reminder.languageCode);
+    } catch (ttsErr) {
+      console.warn('Reminder TTS failed, returning text only:', ttsErr.message);
+    }
 
-    res.json({ dueTasks, reminderText, audioBase64 });
+    res.json({ dueTasks, reminderText: reminder.text, audioBase64 });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to generate reminder.' });

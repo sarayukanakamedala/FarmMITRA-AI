@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const { detectDisease } = require('../services/diseaseService');
 const { textToSpeech } = require('../services/sarvamService');
 const ChatHistory = require('../models/ChatHistory');
@@ -29,12 +29,14 @@ router.post('/detect', upload.single('image'), async (req, res) => {
 
     let audioBase64 = null;
     try {
-      audioBase64 = await textToSpeech(responseText, language || 'en-IN');
+      // Remedy text is written in English, so speak it with the English voice.
+      audioBase64 = await textToSpeech(responseText, 'en-IN');
     } catch (ttsErr) {
       console.warn('TTS failed for disease response:', ttsErr.message);
     }
 
     try {
+      if (require('mongoose').connection.readyState !== 1) throw new Error('database not connected');
       const farmerDoc = phone ? await Farmer.findOne({ phone }).select('_id') : null;
       await ChatHistory.create({
         farmer: farmerDoc ? farmerDoc._id : null,

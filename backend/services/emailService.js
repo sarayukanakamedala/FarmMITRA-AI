@@ -1,6 +1,11 @@
 const { Resend } = require('resend');
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient = null;
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
+  return resendClient;
+}
 
 /**
  * Sends a task reminder email via Resend. Optional/secondary notification
@@ -12,6 +17,9 @@ async function sendTaskReminderEmail(toEmail, farmerName, tasks) {
   const taskListHtml = tasks
     .map((t) => `<li><strong>${t.title}</strong> - due ${new Date(t.dueDate).toDateString()}</li>`)
     .join('');
+
+  const resend = getResend();
+  if (!resend) return { sent: false, reason: 'RESEND_API_KEY is not set in backend/.env.' };
 
   try {
     const result = await resend.emails.send({

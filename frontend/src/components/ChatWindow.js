@@ -97,7 +97,7 @@ export default function ChatWindow({ farmer, language, onLanguageChange, prefill
     try {
       const res = await askTextQuery({ question: q, state: farmer.state, district: farmer.district, language, phone: farmer.phone });
       const id = Date.now();
-      push({ id, from: 'ai', text: res.data.answerText, audio: res.data.audioBase64, priceData: res.data.priceData, weatherData: res.data.weatherData });
+      push({ id, from: 'ai', text: res.data.answerText, audio: res.data.audioBase64, audioError: res.data.audioError, source: res.data.source, priceData: res.data.priceData, weatherData: res.data.weatherData });
       if (res.data.audioBase64) play(id, res.data.audioBase64);
       loadHistory();
     } catch (err) {
@@ -125,7 +125,7 @@ export default function ChatWindow({ farmer, language, onLanguageChange, prefill
       setMessages((prev) => [
         ...prev.filter((m) => m.id !== pendingId),
         { id: `${id}-q`, from: 'farmer', text: res.data.transcribedQuestion || '(could not hear a question)', voice: true },
-        { id, from: 'ai', text: res.data.answerText, audio: res.data.audioBase64, priceData: res.data.priceData, weatherData: res.data.weatherData },
+        { id, from: 'ai', text: res.data.answerText, audio: res.data.audioBase64, audioError: res.data.audioError, source: res.data.source, priceData: res.data.priceData, weatherData: res.data.weatherData },
       ]);
       if (res.data.audioBase64) play(id, res.data.audioBase64);
       loadHistory();
@@ -185,6 +185,12 @@ export default function ChatWindow({ farmer, language, onLanguageChange, prefill
                 {m.from === 'ai' && !m.error && (
                   <>
                     <Evidence priceData={m.priceData} weatherData={m.weatherData} />
+                    {m.source === 'fallback' && (
+                      <p className="bubble-note"><Icon name="info" size={14} /> Simple summary from live data. The AI assistant is not connected.</p>
+                    )}
+                    {!m.audio && m.audioError && (
+                      <p className="bubble-note"><Icon name="volume" size={14} /> Voice reply unavailable: {m.audioError}</p>
+                    )}
                     {m.audio && (
                       <button type="button" className="btn btn-ghost btn-sm" onClick={() => (playingKey === m.id ? stop() : play(m.id, m.audio))}>
                         <Icon name={playingKey === m.id ? 'stop' : 'volume'} size={16} />
